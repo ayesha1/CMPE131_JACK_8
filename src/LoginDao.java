@@ -5,10 +5,10 @@
 */
 import java.sql.*;
 
-public class BookDao {
+public class LoginDao {
 
-	public static boolean save(String name, String price) {
-		boolean isRecordInserted = false;
+	public static boolean validate(String name, String pass) {
+		boolean validLogin = false;
 		try {
 			//defining database driver to use
 			Class.forName("com.mysql.jdbc.Driver");
@@ -20,7 +20,7 @@ public class BookDao {
 			//root: password
 			//syntex : databaseurl/databasename, username , password
 			Connection con = DriverManager.getConnection(
-					"jdbc:mysql://localhost:3306/test", "ayesha", "1234");
+					"jdbc:mysql://localhost:3306/login", "ayesha", "1234");
 			
 			
 
@@ -29,20 +29,22 @@ public class BookDao {
 			// actual query to execute is
 			// select * from users where username = name and password = pass
 			PreparedStatement oPrStmt = con
-					.prepareStatement("INSERT INTO comments (userid,comment) VALUES(?,?)");// ? represents some parameter to include
+					.prepareStatement("select * from users where username=? and password=?");// ? represents some parameter to include
 																							
 			oPrStmt.setString(1, name);// parameter index start from 1
-			oPrStmt.setString(2, price);
-			int nInsertedRecords = oPrStmt.executeUpdate(); // executing the query and getting the updated/inserted row counts from databse
+			oPrStmt.setString(2, pass);
+			ResultSet rs = oPrStmt.executeQuery(); // executing the query and getting the resultset from databse
 			
-			if(nInsertedRecords>0){ // check that the data is inserted successfully or not
-				isRecordInserted = true;
+			//rs.next() shows that the resultset contains nect value or not
+			// for retriving multiple results, you can use while(rs.next)
+			
+			if (rs.next()) { //checking if the resultset has any value?   
+				validLogin = true;
 			}
-			
-			
+		
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		return isRecordInserted;
+		return validLogin;
 	}
 }

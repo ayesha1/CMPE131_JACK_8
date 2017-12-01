@@ -8,29 +8,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-public class InsertServlet extends HttpServlet {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
+public class LoginServlet extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
 		
-		String strName=request.getParameter("userid");
-		String strPrice=request.getParameter("comment");
+		String n=request.getParameter("username");
+		String p=request.getParameter("userpass");
 		
-		
-		
-		if(BookDao.save(strName, strPrice)){
-			RequestDispatcher rd=request.getRequestDispatcher("saved");
+		if(LoginDao.validate(n, p)){
+			RequestDispatcher rd=request.getRequestDispatcher("loggedin");
 			rd.forward(request,response);
 		}
 		else{
-			out.print("Error occured while saving data.");
+			out.print("Sorry username or password error");
 			RequestDispatcher rd=request.getRequestDispatcher("index.html");
 			rd.include(request,response);
 		}
